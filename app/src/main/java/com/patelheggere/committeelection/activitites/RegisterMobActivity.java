@@ -95,25 +95,28 @@ private int position;
            @Override
            public void onClick(View v) {
                boolean isFound = false;
-               for(int i = 0; i<phoneNumbersModelList.size(); i++)
-               {
-                   if(mEditTextMobile.getText().toString().equalsIgnoreCase(phoneNumbersModelList.get(i).getPhone()))
-                   {
-                       position=i;
-                       isFound=true;
-                       break;
+               if(mEditTextMobile.getText().toString().length()==10) {
+                   for (int i = 0; i < phoneNumbersModelList.size(); i++) {
+                       if (mEditTextMobile.getText().toString().equalsIgnoreCase(phoneNumbersModelList.get(i).getPhone())) {
+                           position = i;
+                           isFound = true;
+                           break;
+
+                       }
 
                    }
+                   if (isFound) {
+                       otpLinearLyt.setVisibility(View.VISIBLE);
+                       ll1.setVisibility(View.GONE);
+                       SendOTP();
+                   } else {
+                       Snackbar.make(findViewById(android.R.id.content), "Your Number is not registered with us for voting please contact Admin/Concerened Person", Snackbar.LENGTH_LONG).show();
 
+                   }
                }
-               if(isFound)
+               else
                {
-                   otpLinearLyt.setVisibility(View.VISIBLE);
-                   ll1.setVisibility(View.GONE);
-                   SendOTP();
-               }
-               else {
-                   Snackbar.make(findViewById(android.R.id.content), "Your Number is not registered with us for voting please contact Admin/Concerened Person", Snackbar.LENGTH_LONG).show();
+                   Snackbar.make(findViewById(android.R.id.content), "Please enter 10 digit mobile Number", Snackbar.LENGTH_LONG).show();
 
                }
            }
