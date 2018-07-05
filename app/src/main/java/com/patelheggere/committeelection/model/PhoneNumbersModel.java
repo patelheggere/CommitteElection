@@ -7,21 +7,28 @@ public class PhoneNumbersModel implements Parcelable{
 
     private String name;
     private String phone;
-    private boolean isVoted;
+    private String id;
+    private boolean cp, p, lm;
 
     public PhoneNumbersModel() {
     }
 
-    public PhoneNumbersModel(String name, String phone, boolean isVoted) {
+    public PhoneNumbersModel(String name, String phone, String id, boolean cp, boolean p, boolean lm) {
         this.name = name;
         this.phone = phone;
-        this.isVoted = isVoted;
+        this.id = id;
+        this.cp = cp;
+        this.p = p;
+        this.lm = lm;
     }
 
     protected PhoneNumbersModel(Parcel in) {
         name = in.readString();
         phone = in.readString();
-        isVoted = in.readByte() != 0;
+        id = in.readString();
+        cp = in.readByte() != 0;
+        p = in.readByte() != 0;
+        lm = in.readByte() != 0;
     }
 
     public static final Creator<PhoneNumbersModel> CREATOR = new Creator<PhoneNumbersModel>() {
@@ -52,12 +59,36 @@ public class PhoneNumbersModel implements Parcelable{
         this.phone = phone;
     }
 
-    public boolean isVoted() {
-        return isVoted;
+    public String getId() {
+        return id;
     }
 
-    public void setVoted(boolean voted) {
-        this.isVoted = voted;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isCp() {
+        return cp;
+    }
+
+    public void setCp(boolean cp) {
+        this.cp = cp;
+    }
+
+    public boolean isP() {
+        return p;
+    }
+
+    public void setP(boolean p) {
+        this.p = p;
+    }
+
+    public boolean isLm() {
+        return lm;
+    }
+
+    public void setLm(boolean lm) {
+        this.lm = lm;
     }
 
     @Override
@@ -69,6 +100,9 @@ public class PhoneNumbersModel implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(phone);
-        dest.writeByte((byte) (isVoted ? 1 : 0));
+        dest.writeString(id);
+        dest.writeByte((byte) (cp ? 1 : 0));
+        dest.writeByte((byte) (p ? 1 : 0));
+        dest.writeByte((byte) (lm ? 1 : 0));
     }
 }

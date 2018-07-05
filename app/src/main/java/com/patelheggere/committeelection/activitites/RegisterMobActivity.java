@@ -3,8 +3,10 @@ package com.patelheggere.committeelection.activitites;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,13 +50,14 @@ private LinearLayout ll1, otpLinearLyt;
 private List<PhoneNumbersModel> phoneNumbersModelList;
 private int randomNumber;
 private int position;
+private ActionBar mActionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getMobileNumbers();
         setContentView(R.layout.activity_register_mob);
         initializeViewComponents();
-
     }
 
     private void getMobileNumbers() {
@@ -80,6 +83,12 @@ private int position;
     }
 
     private void initializeViewComponents() {
+        mActionBar = getSupportActionBar();
+        if(mActionBar!=null)
+        {
+            mActionBar.setTitle("Mobile Number Verification");
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+        }
         ll1 = findViewById(R.id.ll1);
         otpLinearLyt = findViewById(R.id.linear_otp);
        mEditTextMobile = findViewById(R.id.et_mobile_number);
@@ -101,7 +110,6 @@ private int position;
                            position = i;
                            isFound = true;
                            break;
-
                        }
 
                    }
@@ -164,7 +172,7 @@ private int position;
                 SharedPrefsHelper.getInstance().save(FIRST_TIME, false);
                 SharedPrefsHelper.getInstance().save(NAME, phoneNumbersModelList.get(position).getName());
                 SharedPrefsHelper.getInstance().save(PHONE, phoneNumbersModelList.get(position).getPhone());
-                SharedPrefsHelper.getInstance().save(IS_VOTED, phoneNumbersModelList.get(position).isVoted());
+
                 moveNextActivity();
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "Please Enter Valid OTP recieved via SMS", Snackbar.LENGTH_LONG).show();
@@ -176,9 +184,20 @@ private int position;
     }
 
     private void moveNextActivity() {
-        Intent intent =  new Intent(RegisterMobActivity.this, MainActivity.class);
+        Intent intent =  new Intent(RegisterMobActivity.this, chiefPatronActivity.class);
         intent.putExtra("DETAILS", phoneNumbersModelList.get(position));
         startActivity(intent);
         finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

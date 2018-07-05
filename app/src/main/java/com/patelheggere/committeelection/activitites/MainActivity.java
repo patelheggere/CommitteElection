@@ -35,10 +35,11 @@ import static com.patelheggere.committeelection.util.AppConstants.IS_VOTED;
 import static com.patelheggere.committeelection.util.AppConstants.NAME;
 import static com.patelheggere.committeelection.util.AppConstants.PHONE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Spinner mChairmanSpinner,mSecretarySpinner, mTreasurerSpinner;
     private Button mSubmitButton, btnReload;
+    private TextView mTvSubmit;
     private TextView textViewAlreadyVoted, textViewName;
     private PhoneNumbersModel phoneNumbersModel;
     private LinearLayout ll_details, ll_voted;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         {
             SharedPrefsHelper.getInstance().save(NAME, phoneNumbersModel.getName());
             SharedPrefsHelper.getInstance().save(PHONE, phoneNumbersModel.getPhone());
-            SharedPrefsHelper.getInstance().save(IS_VOTED, phoneNumbersModel.isVoted());
+            //SharedPrefsHelper.getInstance().save(IS_VOTED, phoneNumbersModel.isVoted());
         }
         if(SharedPrefsHelper.getInstance().get(FIRST_TIME, true))
         {
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             phoneNumbersModel = new PhoneNumbersModel();
             phoneNumbersModel.setName(SharedPrefsHelper.getInstance().get(NAME,null).toString());
             phoneNumbersModel.setPhone(SharedPrefsHelper.getInstance().get(PHONE, null).toString());
-            phoneNumbersModel.setVoted(SharedPrefsHelper.getInstance().get(IS_VOTED, false));
+            //phoneNumbersModel.setVoted(SharedPrefsHelper.getInstance().get(IS_VOTED, false));
         }
         initializeViewComponents();
         getPersonDetails();
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 PhoneNumbersModel ob = new PhoneNumbersModel();
                 ob = dataSnapshot.getValue(PhoneNumbersModel.class);
-                if(ob.isVoted())
+                if(ob.isCp())
                 {
                     ll_details.setVisibility(View.GONE);
                     ll_voted.setVisibility(View.VISIBLE);
@@ -222,6 +223,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViewComponents() {
+
+        mTvSubmit.setOnClickListener(this);
         btnReload = findViewById(R.id.btn_reload);
         btnReload.setVisibility(View.GONE);
         mChairmanSpinner = findViewById(R.id.sp_chairman);
@@ -233,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         ll_details = findViewById(R.id.linear_details);
         ll_voted = findViewById(R.id.linear_already);
-        if(phoneNumbersModel.isVoted()) {
+        if(phoneNumbersModel.isCp()) {
             ll_voted.setVisibility(View.VISIBLE);
             ll_details.setVisibility(View.GONE);
         }
@@ -286,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 databaseReference.setValue(votingModel);
                 databaseReference = firebaseDatabase.getReference().child("phone_numbers").child(votingModel.getPhone());
-                phoneNumbersModel.setVoted(true);
+                //phoneNumbersModel.setVoted(true);
                 SharedPrefsHelper.getInstance().save(IS_VOTED, true);
                 databaseReference.setValue(phoneNumbersModel);
             }
@@ -303,5 +306,15 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.btn_submit:
+
+                break;
+        }
     }
 }

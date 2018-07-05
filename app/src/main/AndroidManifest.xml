@@ -9,25 +9,32 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".CommitteElection"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".CommitteElection">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activitites.LoginActivity"
             android:label="@string/app_name" />
-        <activity android:name=".activitites.SplashScreenActivity">
+        <activity
+            android:name=".activitites.SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
+        <activity android:name=".activitites.RegisterMobActivity" />
+        <activity android:name=".activitites.MainActivity" />
+        <activity android:name=".activitites.InstructionActivity" />
+        <activity android:name=".activitites.AnubhandaActivity" />
+        <activity android:name=".activitites.chiefPatronActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitites.RegisterMobActivity" />
-        <activity android:name=".activitites.MainActivity"></activity>
     </application>
 
 </manifest>
