@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.patelheggere.committeelection">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -23,18 +19,19 @@
             android:name=".activitites.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activitites.RegisterMobActivity" />
         <activity android:name=".activitites.MainActivity" />
         <activity android:name=".activitites.InstructionActivity" />
         <activity android:name=".activitites.AnubhandaActivity" />
-        <activity android:name=".activitites.chiefPatronActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activitites.chiefPatronActivity" />
+        <activity android:name=".activitites.PatronActivity" />
+        <activity android:name=".activitites.LifeMemberActivity"></activity>
     </application>
 
 </manifest>

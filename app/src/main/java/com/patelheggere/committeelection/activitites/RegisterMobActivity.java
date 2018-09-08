@@ -35,9 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.patelheggere.committeelection.util.AppConstants.CP;
 import static com.patelheggere.committeelection.util.AppConstants.FIRST_TIME;
+import static com.patelheggere.committeelection.util.AppConstants.ID;
 import static com.patelheggere.committeelection.util.AppConstants.IS_VOTED;
+import static com.patelheggere.committeelection.util.AppConstants.LM;
 import static com.patelheggere.committeelection.util.AppConstants.NAME;
+import static com.patelheggere.committeelection.util.AppConstants.P;
 import static com.patelheggere.committeelection.util.AppConstants.PHONE;
 
 public class RegisterMobActivity extends AppCompatActivity {
@@ -104,7 +108,8 @@ private ActionBar mActionBar;
            @Override
            public void onClick(View v) {
                boolean isFound = false;
-               if(mEditTextMobile.getText().toString().length()==10) {
+               if(mEditTextMobile.getText().toString().length()==10)
+               {
                    for (int i = 0; i < phoneNumbersModelList.size(); i++) {
                        if (mEditTextMobile.getText().toString().equalsIgnoreCase(phoneNumbersModelList.get(i).getPhone())) {
                            position = i;
@@ -172,7 +177,10 @@ private ActionBar mActionBar;
                 SharedPrefsHelper.getInstance().save(FIRST_TIME, false);
                 SharedPrefsHelper.getInstance().save(NAME, phoneNumbersModelList.get(position).getName());
                 SharedPrefsHelper.getInstance().save(PHONE, phoneNumbersModelList.get(position).getPhone());
-
+                SharedPrefsHelper.getInstance().save(ID, phoneNumbersModelList.get(position).getId());
+                SharedPrefsHelper.getInstance().save(CP,phoneNumbersModelList.get(position).isCp());
+                SharedPrefsHelper.getInstance().save(P, phoneNumbersModelList.get(position).isP());
+                SharedPrefsHelper.getInstance().save(LM, phoneNumbersModelList.get(position).isLm() );
                 moveNextActivity();
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "Please Enter Valid OTP recieved via SMS", Snackbar.LENGTH_LONG).show();

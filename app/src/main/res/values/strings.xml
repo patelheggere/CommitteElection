@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Committe Election</string>
+    <string name="app_name">Committee Selection</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -45,6 +45,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="cp_submitted">Submitted</string>
-    <string name="go_to_patron">Go To Patron</string>
+    <string name="cp_submitted">ಮಹಾಪೋಷಕ ಸದಸ್ಯರ ಆಯ್ಕೆ ಮುಗಿದಿದೆ</string>
+    <string name="go_to_patron">ಪೋಷಕ ಸದಸ್ಯರ ಆಯ್ಕೆಗೆ ಹೋಗಿ</string>
+
+    <string name="p_submitted">ಪೋಷಕ ಸದಸ್ಯರ ಆಯ್ಕೆ ಮುಗಿದಿದೆ</string>
+    <string name="go_to_life">ಆಜೀವ ಸದಸ್ಯರ ಆಯ್ಕೆಗೆ ಹೋಗಿ</string>
+
+    <string name="lm_submitted">ಆಜೀವ ಸದಸ್ಯರ ಆಯ್ಕೆ ಮುಗಿದಿದೆ</string>
+    <string name="quit">QUIT</string>
 </resources>

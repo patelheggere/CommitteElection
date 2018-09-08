@@ -47,6 +47,7 @@ public class InstructionActivity extends AppCompatActivity implements Instructio
         {
             case R.id.btn_accept:
                 startActivity(new Intent(InstructionActivity.this, AnubhandaActivity.class));
+                finish();
                 break;
             case R.id.btn_decline:
                 finish();

@@ -2,13 +2,11 @@ package com.patelheggere.committeelection.activitites;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.patelheggere.committeelection.R;
-import com.patelheggere.committeelection.model.ManagementModel;
 import com.patelheggere.committeelection.model.PhoneNumbersModel;
 import com.patelheggere.committeelection.model.VotingModel;
 import com.patelheggere.committeelection.util.SharedPrefsHelper;
@@ -37,17 +34,16 @@ import java.util.List;
 import static com.patelheggere.committeelection.util.AppConstants.CP;
 import static com.patelheggere.committeelection.util.AppConstants.FIRST_TIME;
 import static com.patelheggere.committeelection.util.AppConstants.ID;
-import static com.patelheggere.committeelection.util.AppConstants.IS_VOTED;
 import static com.patelheggere.committeelection.util.AppConstants.LM;
 import static com.patelheggere.committeelection.util.AppConstants.NAME;
 import static com.patelheggere.committeelection.util.AppConstants.P;
 import static com.patelheggere.committeelection.util.AppConstants.PHONE;
 
-public class chiefPatronActivity extends AppCompatActivity implements View.OnClickListener{
+public class PatronActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ActionBar mActionBar;
     private Spinner mPresidentSpinner, mSecretarySpinner, mTreasurerSpinner, mVPSpinner, mOSSpinner, mSpSpinner, mD1Spinner
-    ,mD2Spinner,mD3Spinner, mD4Spinner, mD5Spinner, mD6Spinner, mD7Spinner, mD8Spinner, mD9Spinner, mD10Spinner, mD11Spinner,
+            ,mD2Spinner,mD3Spinner, mD4Spinner, mD5Spinner, mD6Spinner, mD7Spinner, mD8Spinner, mD9Spinner, mD10Spinner, mD11Spinner,
             mD12Spinner, mD13Spinner, mD14Spinner, mD15Spinner, mD16Spinner, mD17Spinner;
     private Button mSubmitButton,mButtonNext, btnReload;
     private TextView textViewAlreadyVoted, textViewName;
@@ -58,7 +54,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
     private ArrayAdapter<String> PresidentAdapter, VPAdapter, SVPAdapter, SecretaryAdapter, TreasurerAdapter, OSAdapter, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12,
-    d13, d14, d15, d16, d17;
+            d13, d14, d15, d16, d17;
     private List<PhoneNumbersModel> managementModelList;
     private List<String> managemnetName;
     private List<String> PresidentName;
@@ -75,12 +71,12 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chief_patron);
+        setContentView(R.layout.activity_patron);
         managementModelList = new ArrayList<>();
         votingModel = new VotingModel();
         phoneNumbersModel = new PhoneNumbersModel();
+        //managementModelList = getIntent().getParcelableArrayListExtra("MEMBERS");
         phoneNumbersModel = getIntent().getParcelableExtra("DETAILS");
-
         if(phoneNumbersModel!=null)
         {
             SharedPrefsHelper.getInstance().save(NAME, phoneNumbersModel.getName());
@@ -89,27 +85,26 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             SharedPrefsHelper.getInstance().save(CP, phoneNumbersModel.isCp());
             SharedPrefsHelper.getInstance().save(P, phoneNumbersModel.isP());
             SharedPrefsHelper.getInstance().save(LM, phoneNumbersModel.isLm() );
-           // SharedPrefsHelper.getInstance().save(IS_VOTED, phoneNumbersModel.isVoted());
+            // SharedPrefsHelper.getInstance().save(IS_VOTED, phoneNumbersModel.isVoted());
         }
         if(SharedPrefsHelper.getInstance().get(FIRST_TIME, true))
         {
 
         }
-        else {
+        /*else {
             phoneNumbersModel = new PhoneNumbersModel();
             phoneNumbersModel.setName(SharedPrefsHelper.getInstance().get(NAME,null).toString());
             phoneNumbersModel.setPhone(SharedPrefsHelper.getInstance().get(PHONE, null).toString());
             phoneNumbersModel.setId(SharedPrefsHelper.getInstance().get(ID, null).toString());
-           // phoneNumbersModel.setVoted(SharedPrefsHelper.getInstance().get(IS_VOTED, false));
-        }
+            // phoneNumbersModel.setVoted(SharedPrefsHelper.getInstance().get(IS_VOTED, false));
+        }*/
         initializeView();
-        getPersonDetails();
-        getDetails();
+       getPersonDetails();
+       getDetails();
     }
 
     private void initializeView() {
         progressBar = findViewById(R.id.progress_bar);
-        progressBar.setVisibility(View.VISIBLE);
         mTvSubmit = findViewById(R.id.btn_submit);
         mTvSubmit.setOnClickListener(this);
 
@@ -120,7 +115,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         mActionBar = getSupportActionBar();
         if(mActionBar!=null)
         {
-            mActionBar.setTitle("ಮಹಾಪೋಷಕ ಸದಸ್ಯರ ಆಯ್ಕೆ ");
+            mActionBar.setTitle("ಪೋಷಕ ಸದಸ್ಯರ ಆಯ್ಕೆ ");
         }
 
         mTvSubmit = findViewById(R.id.btn_submit);
@@ -163,16 +158,14 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 PhoneNumbersModel ob = new PhoneNumbersModel();
-                progressBar.setVisibility(View.INVISIBLE);
                 ob = dataSnapshot.getValue(PhoneNumbersModel.class);
-                if(ob.isCp())
+                if(ob.isP())
                 {
                     scrollView.setVisibility(View.GONE);
                     ll_voted.setVisibility(View.VISIBLE);
                     SharedPrefsHelper.getInstance().save(CP, ob.isCp());
                     SharedPrefsHelper.getInstance().save(P, ob.isP());
                     SharedPrefsHelper.getInstance().save(LM, ob.isLm());
-
                 }
                 else {
                     scrollView.setVisibility(View.VISIBLE);
@@ -189,13 +182,14 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
     private void getDetails() {
         progressBar.setVisibility(View.VISIBLE);
-       // scrollView.setVisibility(View.INVISIBLE);
+        // scrollView.setVisibility(View.INVISIBLE);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("ec_members");
         managementModelList.removeAll(managementModelList);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
                 for(DataSnapshot child: dataSnapshot.getChildren())
                 {
                     PhoneNumbersModel ob = new PhoneNumbersModel();
@@ -231,9 +225,11 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
                 D16Name = new ArrayList<String>(managemnetName);
                 D17Name = new ArrayList<String>(managemnetName);
                 D13Name = new ArrayList<String>(managemnetName);
+
                 loadData();
                 progressBar.setVisibility(View.INVISIBLE);
                 mButtonNext.setEnabled(true);
+
 
             }
 
@@ -246,7 +242,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
     private void loadData() {
 
-        PresidentAdapter = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, PresidentName);
+        PresidentAdapter = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, PresidentName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         PresidentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -254,8 +250,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         mPresidentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!PresidentName.get(position).equalsIgnoreCase("Select"))
-                {
+                if(PresidentName.get(position)!="Select"){
                     pName = PresidentName.get(position);
                     removeName(PresidentName.get(position));
                     SVPAdapter.notifyDataSetChanged();
@@ -290,7 +285,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        SVPAdapter= new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, SVPresidentName);
+        SVPAdapter= new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, SVPresidentName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         SVPAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -298,7 +293,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         mSpSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!SVPresidentName.get(position).equalsIgnoreCase("Select")){
+                if(SVPresidentName.get(position)!="Select"){
                     svpName = SVPresidentName.get(position);
                     removeName(SVPresidentName.get(position));
                     VPAdapter.notifyDataSetChanged();
@@ -333,7 +328,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         });
 
 
-        VPAdapter= new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, VicePresidentName);
+        VPAdapter= new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, VicePresidentName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         VPAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -376,7 +371,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         });
 
 
-        SecretaryAdapter = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, SecretaryName);
+        SecretaryAdapter = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, SecretaryName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         SecretaryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -417,7 +412,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        TreasurerAdapter = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, TreasurerName);
+        TreasurerAdapter = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, TreasurerName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         TreasurerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -457,7 +452,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         });
 
 
-        OSAdapter= new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, OSecretaryName);
+        OSAdapter= new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, OSecretaryName);
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         OSAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -497,7 +492,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
 
 
-        d1 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D1Name );
+        d1 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D1Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -536,7 +531,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d2 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D2Name );
+        d2 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D2Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -577,7 +572,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         });
 
 
-        d3 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D3Name );
+        d3 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D3Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -614,7 +609,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        d4 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D4Name );
+        d4 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D4Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -649,7 +644,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d5 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D5Name );
+        d5 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D5Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -683,7 +678,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d6 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D6Name );
+        d6 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D6Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d6.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -717,7 +712,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d7 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D7Name );
+        d7 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D7Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d7.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -749,7 +744,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d8 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D8Name );
+        d8 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D8Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d8.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -780,7 +775,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d9 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D9Name );
+        d9 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D9Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d9.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -810,7 +805,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d10 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D10Name );
+        d10 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D10Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d10.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -839,7 +834,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d11 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D11Name );
+        d11 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D11Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d11.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -866,7 +861,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d12 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D12Name );
+        d12 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D12Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d12.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -893,7 +888,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d13 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D13Name );
+        d13 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D13Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d13.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -919,7 +914,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d14 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D14Name );
+        d14 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D14Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d14.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -944,7 +939,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d15 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D15Name );
+        d15 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D15Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d15.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -967,7 +962,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d16 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D16Name );
+        d16 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D16Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d16.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -989,7 +984,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-        d17 = new ArrayAdapter<String>( chiefPatronActivity.this, android.R.layout.simple_spinner_item, D17Name );
+        d17 = new ArrayAdapter<String>( PatronActivity.this, android.R.layout.simple_spinner_item, D17Name );
         // ArrayAdapter<CharSequence> CategoryAdapter = ArrayAdapter.createFromResource(this, R.array.array_cat, android.R.layout.simple_spinner_item);
         d17.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
@@ -999,7 +994,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 d17Name = D17Name.get(position);
-                removeName(D17Name.get(position));
+
             }
 
             @Override
@@ -1045,7 +1040,7 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         {
             case R.id.btn_submit:
                 if(allFeilds()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(chiefPatronActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PatronActivity.this);
                     builder.setNegativeButton("EDIT", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -1069,16 +1064,10 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.btn_patron_act:
-                if(phoneNumbersModel!=null && managementModelList!=null) {
-                    Intent intent = new Intent(chiefPatronActivity.this, PatronActivity.class);
-                    intent.putExtra("DETAILS", phoneNumbersModel);
-                    intent.putParcelableArrayListExtra("MEMBERS", (ArrayList<? extends Parcelable>) managementModelList);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Toast.makeText(chiefPatronActivity.this, "Some details not available to go next phase", Toast.LENGTH_LONG).show();
-                }
+                Intent intent = new Intent(PatronActivity.this, LifeMemberActivity.class);
+                intent.putExtra("DETAILS", phoneNumbersModel);
+                startActivity(intent);
+                finish();
                 break;
 
 
@@ -1087,26 +1076,20 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
 
     private void submitData() {
 
-
         votingModel.setName(phoneNumbersModel.getName());
         votingModel.setPhone(phoneNumbersModel.getPhone());
 
-            final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference().child("CastedVotes").child("ChiefPatrons").child(phoneNumbersModel.getId());
-            databaseReference.setValue(votingModel);
-            databaseReference = firebaseDatabase.getReference().child("phone_numbers").child(phoneNumbersModel.getId()).child("cp");
-            databaseReference.setValue(true);
-            SharedPrefsHelper.getInstance().save(CP, true);
-
-
-        // phoneNumbersModel.setVoted(true);
-        //SharedPrefsHelper.getInstance().save(IS_VOTED, true);
-        //databaseReference.setValue(phoneNumbersModel);
+                final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference().child("CastedVotes").child("Patron").child(phoneNumbersModel.getId());
+                databaseReference.setValue(votingModel);
+                databaseReference = firebaseDatabase.getReference().child("phone_numbers").child(phoneNumbersModel.getId()).child("p");
+                databaseReference.setValue(true);
+                SharedPrefsHelper.getInstance().save(P, true);
 
     }
 
     private void showAlert() {
-        Toast.makeText(chiefPatronActivity.this, "Please Select all memebers", Toast.LENGTH_LONG).show();
+        Toast.makeText(PatronActivity.this, "Please Select all memebers", Toast.LENGTH_LONG).show();
         return;
     }
 
@@ -1114,8 +1097,8 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
     {
         if(d17Name!=null)
             votingModel.setD17name(d17Name);
-            else
-                return false;
+        else
+            return false;
         if(pName!=null)
             votingModel.setChairman(pName);
         else
@@ -1210,3 +1193,5 @@ public class chiefPatronActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 }
+
+

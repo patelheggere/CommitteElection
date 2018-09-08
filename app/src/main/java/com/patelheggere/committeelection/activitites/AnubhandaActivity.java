@@ -148,6 +148,7 @@ public class AnubhandaActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.btn_continue:
                 startActivity(new Intent(AnubhandaActivity.this, RegisterMobActivity.class));
+                finish();
                 break;
             case android.R.id.home:
                 finish();
